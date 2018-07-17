@@ -1,0 +1,41 @@
+
+数据的寻地方式：（思考角度：数据放在哪里，怎么找到它？）
+
+1/立即数寻址
+
+2/寄存器寻址
+
+
+3/基址+寄存器偏移地址
+.section .data
+arr:
+ .int 1,3,4
+ .equ arrlen,(.-arr)/4
+sum:
+   .int 0
+
+ .section .text
+ .globl _start
+
+ _start:  
+ movl $arrlen,%ecx
+ movl $0,%edi
+
+ loop:
+ movl ($arr,%edi,4),%ebx
+ addl %ebx,($sum)
+ incl %edi
+ decl %ecx
+ cmpl %ecx,0
+ je exitLoop
+ jmp loop
+
+exitLoop:
+    movl ($sum) ,%ebx
+    movl $1 , %eax
+    int $0x80
+
+
+4/ 变址寻址
+
+movl val(,%edi,mul)  mul 通常是数据宽度  %edi就是索引 数组的 val是一个动态的数字
